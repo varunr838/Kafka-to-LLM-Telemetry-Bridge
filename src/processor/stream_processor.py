@@ -6,6 +6,7 @@ from pyspark.sql.functions import (
 from pyspark.sql.types import (
     StructType, StructField, StringType, IntegerType, LongType
 )
+from src.processor.transforms import get_gold_df, get_dlq_df
 
 # ─────────────────────────────────────────────
 # 1. SPARK SESSION
@@ -106,17 +107,11 @@ def process_batch(batch_df, batch_id):
 
     # ── Good records (Gold) ──────────────────────────────
     # Valid user_id AND status_code within the normal range
-    gold_df = batch_df.filter(
-        col("user_id").isNotNull()
-        & (col("status_code") <= 599)
-    )
+    gold_df = get_gold_df(batch_df)
 
     # ── Bad records (DLQ) ────────────────────────────────
     # Missing user_id OR out-of-range status code
-    dlq_df = batch_df.filter(
-        col("user_id").isNull()
-        | (col("status_code") > 599)
-    )
+    dlq_df = get_dlq_df(batch_df)
 
     gold_count = gold_df.count()
     dlq_count  = dlq_df.count()

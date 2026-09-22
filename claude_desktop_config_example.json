@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "telemetry-bridge": {
+      "command": "python",
+      "args": [
+        "c:\\Users\\Ramasamy\\Desktop\\New folder\\Kafka-to-LLM Telemetry Bridge\\src\\mcp_server\\server.py"
+      ]
+    }
+  }
+}
